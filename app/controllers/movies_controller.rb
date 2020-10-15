@@ -13,15 +13,20 @@ class MoviesController < ApplicationController
     if params[:refresh] != nil
       session[:ratings] = Hash[@all_ratings.collect { |item| [item, "1"] } ]
     end
+    if params[:sort] == nil && params[:ratings] == nil
+      params[:sort] = session[:sort]
+      params[:ratings] = session[:ratings]
+    end
     if params[:sort] == "title"
       ratings_list = session[:ratings].keys
       @movies = Movie.with_ratings(ratings_list).sort_by &:title
-    elsif params[:sort] == "release_date"
+    elsif params[:sort] == "release_date" || session[:sort] == "release_date"
+      session[:sort] = params[:sort]
       ratings_list = session[:ratings].keys
       @movies = Movie.with_ratings(ratings_list).sort_by &:release_date
     elsif params[:ratings] != nil
       session[:ratings] = params[:ratings]
-      ratings_list = params[:ratings].keys
+      ratings_list = session[:ratings].keys
       @movies = Movie.with_ratings(ratings_list)
     else
       @movies = Movie.all
