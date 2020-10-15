@@ -18,9 +18,10 @@ class MoviesController < ApplicationController
       params[:ratings] = session[:ratings]
     end
     if params[:sort] == "title"
+      session[:sort] = params[:sort]
       ratings_list = session[:ratings].keys
       @movies = Movie.with_ratings(ratings_list).sort_by &:title
-    elsif params[:sort] == "release_date" || session[:sort] == "release_date"
+    elsif params[:sort] == "release_date"
       session[:sort] = params[:sort]
       ratings_list = session[:ratings].keys
       @movies = Movie.with_ratings(ratings_list).sort_by &:release_date
